@@ -1,5 +1,15 @@
 import pygame, sys, random
 
+# Define the scale_image function here
+# def scale_image(image, width, height):
+#     image_ratio = image.get_width() / image.get_height()
+#     screen_ratio = width / height
+#     if screen_ratio < image_ratio:
+#         scale = width / image.get_width()
+#     else:
+#         scale = height / image.get_height()
+#     return pygame.transform.scale(image, (int(image.get_width() * scale), int(image.get_height() * scale)))
+
 def reset_ball():
     global ball_speed_x, ball_speed_y
     ball.x = screen_width/2 - 10
@@ -101,6 +111,20 @@ player2_speed = 6
 player2_points, player1_points = 0, 0
 
 score_font = pygame.font.Font(None, 100)
+#Load background
+background_image = pygame.image.load('img/background1.jpg').convert()
+background_image = pygame.transform.scale(background_image, (screen_width, screen_height))
+
+# Load the bar image
+bar_width = 100  # Define the width of the bar
+bar_height = 20  # Define the height of the bar
+bar_image = pygame.image.load('img/bar.png').convert_alpha()
+bar_image = pygame.transform.scale(bar_image, (bar_width, bar_height))  # Adjust the size to fit your bar
+
+bar2_image = pygame.image.load('img/bar.png').convert_alpha()
+bar2_image = pygame.transform.scale(bar2_image, (bar_width, bar_height))  # Adjust the size to fit your bar
+
+
 # Load the item image
 item_image = pygame.image.load('img/Icon.jpg')
 item_image = pygame.transform.scale(item_image, (30, 30)).convert_alpha()
@@ -108,13 +132,12 @@ item_image = pygame.transform.scale(item_image, (30, 30)).convert_alpha()
 # Create the item
 item = pygame.Rect(random.randint(0, screen_width), random.randint(0, screen_height), 30, 30)
 
-# Load the item image
+# Load the second item image
 item2_image = pygame.image.load('img/Icon2.jpg')
-item2_image = pygame.transform.scale(item_image, (30, 30)).convert_alpha()
+item2_image = pygame.transform.scale(item2_image, (30, 30)).convert_alpha()  # Corrected this line
 
-# Create the item
+# Create the second item
 item2 = pygame.Rect(random.randint(0, screen_width), random.randint(0, screen_height), 30, 30)
-
 
 while True:
     #Check for events
@@ -148,8 +171,16 @@ while True:
         pygame.time.wait(6000)
         break
     
-    #Clear the screen
+    # #Clear the screen
     screen.fill('black')
+
+    # Draw the background image
+    screen.blit(background_image, (0, 0))
+
+    # Draw the bar
+    screen.blit(bar_image, player1)  # Replace 'player1' with your bar's Rect object
+    # Draw the bar for player2
+    screen.blit(bar2_image, player2)  # Replace 'player2' with your bar's Rect object
 
     #Draw the score
     player2_score_surface = score_font.render(str(player2_points), True, "white")
