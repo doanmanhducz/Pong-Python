@@ -9,21 +9,26 @@ import pygame, sys, random
 #     else:
 #         scale = height / image.get_height()
 #     return pygame.transform.scale(image, (int(image.get_width() * scale), int(image.get_height() * scale)))
+initial_ball_speed = 6  # Reset the ball speed
 
 def reset_ball():
     global ball_speed_x, ball_speed_y
     ball.x = screen_width/2 - 10
     ball.y = random.randint(10,100)
+    ball_speed_x = initial_ball_speed  # Reset the ball speed
+    ball_speed_y = initial_ball_speed  # Reset the ball speed
     ball_speed_x *= random.choice([-1,1])
     ball_speed_y *= random.choice([-1,1])
 
 def point_won(winner):
-    global player2_points, player1_points
+    global ball_speed, player2_points, player1_points
 
     if winner == "player2":
         player2_points += 1
     if winner == "player1":
         player1_points += 1
+    ball_speed = initial_ball_speed
+    
 
     reset_ball()
 
@@ -48,7 +53,6 @@ def animate_ball():
         item2.x = random.randint(0, screen_width)
         item2.y = random.randint(0, screen_height)
 
-
     if ball.bottom >= screen_height or ball.top <= 0:
         ball_speed_y *= -1
 
@@ -60,6 +64,7 @@ def animate_ball():
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
     if ball.colliderect(player1) or ball.colliderect(player2):
         ball_speed_x *= -1
+        
 
 def animate_player():
     keys = pygame.key.get_pressed()
@@ -82,6 +87,8 @@ def animate_player():
         player2.top = 0
     if player2.bottom >= screen_height:
         player2.bottom = screen_height
+
+pygame.mixer.init()
 
 pygame.init()
 
@@ -111,18 +118,19 @@ player2_speed = 6
 player2_points, player1_points = 0, 0
 
 score_font = pygame.font.Font(None, 100)
+
 #Load background
 background_image = pygame.image.load('img/background1.jpg').convert()
 background_image = pygame.transform.scale(background_image, (screen_width, screen_height))
 
 # Load the bar image
-bar_width = 100  # Define the width of the bar
-bar_height = 20  # Define the height of the bar
-bar_image = pygame.image.load('img/bar.png').convert_alpha()
-bar_image = pygame.transform.scale(bar_image, (bar_width, bar_height))  # Adjust the size to fit your bar
+# bar_width = 100  # Define the width of the bar
+# bar_height = 20  # Define the height of the bar
+# bar1_image = pygame.image.load('img/bar.png').convert_alpha()
+# bar1_image = pygame.transform.scale(bar1_image, (bar_width, bar_height))  # Adjust the size to fit your bar
 
-bar2_image = pygame.image.load('img/bar.png').convert_alpha()
-bar2_image = pygame.transform.scale(bar2_image, (bar_width, bar_height))  # Adjust the size to fit your bar
+# bar2_image = pygame.image.load('img/bar.png').convert_alpha()
+# bar2_image = pygame.transform.scale(bar2_image, (bar_width, bar_height))  # Adjust the size to fit your bar
 
 
 # Load the item image
@@ -139,6 +147,10 @@ item2_image = pygame.transform.scale(item2_image, (30, 30)).convert_alpha()  # C
 # Create the second item
 item2 = pygame.Rect(random.randint(0, screen_width), random.randint(0, screen_height), 30, 30)
 
+#Load and play backkground music:
+pygame.mixer.music.load('sounds/background_music.mp3')
+pygame.mixer.music.play(-1)  # The -1 makes the music loop indefinitely
+
 while True:
     #Check for events
     for event in pygame.event.get():
@@ -153,6 +165,10 @@ while True:
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                 player1_speed = 0
+    # If the game is over, stop the background music
+    game_over = False
+    if game_over:
+        pygame.mixer.music.stop()
 
     #Change the positions of the game objects
     animate_ball()
@@ -177,10 +193,9 @@ while True:
     # Draw the background image
     screen.blit(background_image, (0, 0))
 
-    # Draw the bar
-    screen.blit(bar_image, player1)  # Replace 'player1' with your bar's Rect object
-    # Draw the bar for player2
-    screen.blit(bar2_image, player2)  # Replace 'player2' with your bar's Rect object
+    # Draw the bars
+    # screen.blit(bar1_image, player1.topleft)  # Replace 'player1' with your bar's Rect object
+    # screen.blit(bar2_image, player2.topleft)  # Replace 'player2' with your bar's Rect object
 
     #Draw the score
     player2_score_surface = score_font.render(str(player2_points), True, "white")
