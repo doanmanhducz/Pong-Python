@@ -182,7 +182,7 @@ while True:
         break
     elif player2_points >= 10:
         win_surface = score_font.render("You win!", True, "white")
-        screen.blit(win_surface, (screen_width/2, screen_height/2))
+        screen.blit(win_surface, (screen_width/4, screen_height/2))
         pygame.display.update()
         pygame.time.wait(6000)
         break
