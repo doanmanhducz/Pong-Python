@@ -206,14 +206,14 @@ background_image = pygame.transform.scale(background_image, (screen_width, scree
 
 
 # Load the item image
-item_image = pygame.image.load('img/tangtoc.jpg')
+item_image = pygame.image.load('img/tangtoc.png')
 item_image = pygame.transform.scale(item_image, (30, 30)).convert_alpha()
 
 # Create the item
 item = pygame.Rect(random.randint(0, screen_width), random.randint(0, screen_height), 30, 30)
 
 # Load the second item image
-item2_image = pygame.image.load('img/giamtoc.jpg')
+item2_image = pygame.image.load('img/giamtoc.png')
 item2_image = pygame.transform.scale(item2_image, (30, 30)).convert_alpha()
 
 # Create the second item
@@ -234,7 +234,7 @@ item3 = pygame.Rect(random.randint(0, screen_width), random.randint(0, screen_he
 # item4 = pygame.Rect(random.randint(0, screen_width), random.randint(0, screen_height), 30, 30)
 
 # Load the fifth item image
-item5_image = pygame.image.load('img/x2diem.png')
+item5_image = pygame.image.load('img/biggerbar.png')
 item5_image = pygame.transform.scale(item5_image, (30, 30)).convert_alpha()
 
 # Create the fifth item
@@ -248,14 +248,14 @@ item6_image = pygame.transform.scale(item6_image, (30, 30)).convert_alpha()
 item6 = pygame.Rect(random.randint(0, screen_width), random.randint(0, screen_height), 30, 30)
 
 # Load the seventh item image
-item7_image = pygame.image.load('img/bigball.png')
+item7_image = pygame.image.load('img/upsizeball.png')
 item7_image = pygame.transform.scale(item7_image, (30, 30)).convert_alpha()
 
 # Create the seventh item
 item7 = pygame.Rect(random.randint(0, screen_width), random.randint(0, screen_height), 30, 30)
 
 # Load the eighth item image
-item8_image = pygame.image.load('img/smallball.png')
+item8_image = pygame.image.load('img/downsizeball.png')
 item8_image = pygame.transform.scale(item8_image, (30, 30)).convert_alpha()
 
 # Create the eighth item
