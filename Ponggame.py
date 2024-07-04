@@ -23,6 +23,9 @@ player2 = pygame.Rect(screen_width - 50, screen_height // 2, 10, original_bar_he
 original_ball_size = 20
 ball = pygame.Rect(screen_width // 2 - 10, screen_height // 2 - 10, original_ball_size, original_ball_size)
 
+
+item4_hit = False
+
 def reset_ball():
     global ball_speed_x, ball_speed_y
     ball.x = screen_width/2 - 10
@@ -33,12 +36,14 @@ def reset_ball():
     ball_speed_y *= random.choice([-1,1])
 
 def point_won(winner):
-    global ball_speed, player2_points, player1_points
-
+    global ball_speed_x, ball_speed_y, player2_points, player1_points, item4_hit
     if winner == "player2":
-        player2_points += 1
-    if winner == "player1":
-        player1_points += 1
+        player2_points += 2 if item4_hit else 1
+        item4_hit = False
+    elif winner == "player1":
+        player1_points += 2 if item4_hit else 1
+        item4_hit = False
+
     ball_speed = initial_ball_speed
     # Reset the bar sizes
     player1.height = original_bar_height
@@ -52,44 +57,28 @@ def point_won(winner):
 
 def animate_ball():
     global ball_speed_x, ball_speed_y
+    global player1_points, player2_points
     ball.x += ball_speed_x
     ball.y += ball_speed_y
-
     if ball.colliderect(item):
         ball_speed_x *= 1.2
         ball_speed_y *= 1.2
         # Move the item to a new random position
         item.x = random.randint(0, screen_width)
         item.y = random.randint(0, screen_height)
-
     if ball.colliderect(item2):
         ball_speed_x *= 0.8
         ball_speed_y *= 0.8
         item2.x = random.randint(0, screen_width)
         item2.y = random.randint(0, screen_height)
-
     if ball.colliderect(item3):
         ball_speed_y *= -1
         item3.x = random.randint(0, screen_width)
         item3.y = random.randint(0, screen_height)
-
-    # if ball.colliderect(item4):
-    #     # Double the points for the winner
-    #     if ball_speed_x > 0:  # Ball is moving to the right, player2 wins
-    #         player2_points += 2
-    #     else:  # Ball is moving to the left, player1 wins
-    #         player1_points += 2
-    #     # End the round and start a new one
-    #     ball.center = (screen_width // 2, screen_height // 2)  # Reset the ball's position
-    #     ball_speed_y = 3 if random.choice((0, 1)) == 0 else -3  # Reset the ball's speed
-    #     ball_speed_x = 3 if random.choice((0, 1)) == 0 else -3  # Reset the ball's speed
-    #     player1.center = (50, screen_height // 2)  # Reset player1's position
-    #     player2.center = (screen_width - 50, screen_height // 2)  # Reset player2's position
-
-    #     # Move the fourth item to a new random position
-    #     item4.x = random.randint(0, screen_width)
-    #     item4.y = random.randint(0, screen_height)
-
+    if ball.colliderect(item4):
+        item4_hit = True
+        item4.x = random.randint(0, screen_width)
+        item4.y = random.randint(0, screen_height)
     if ball.colliderect(item5):
         # Increase the length of the player's bar by 1.5 times
         if ball_speed_x > 0:  # Ball is moving to the right, player2's bar increases
@@ -98,7 +87,6 @@ def animate_ball():
             player1.height *= 1.5
         item5.x = random.randint(0, screen_width)
         item5.y = random.randint(0, screen_height)
-
     if ball.colliderect(item6):
         if ball_speed_x > 0:
             player1.height *= 0.75
@@ -106,41 +94,27 @@ def animate_ball():
             player2.height *= 0.75
         item6.x = random.randint(0, screen_width)
         item6.y = random.randint(0, screen_height)
-
     if ball.colliderect(item7):
         # Increase the size of the ball by 1.5 times
         ball.width *= 1.5
         ball.height *= 1.5
         item7.x = random.randint(0, screen_width)
         item7.y = random.randint(0, screen_height)
-    
     if ball.colliderect(item8):
         # Decrease the size of the ball by 0.75 times
         ball.width *= 0.75
         ball.height *= 0.75
         item8.x = random.randint(0, screen_width)
         item8.y = random.randint(0, screen_height)
-
-    if ball.colliderect(item9):
-        # Create a new ball
-        ball2 = pygame.Rect(ball.x, ball.y, ball.width, ball.height)
-        ball2_active = True
-        item9.x = random.randint(0, screen_width)
-        item9.y = random.randint(0, screen_height)
-
     if ball.bottom >= screen_height or ball.top <= 0:
         ball_speed_y *= -1
-
     if ball.right >= screen_width:
         point_won("player2")
-
     if ball.left <= 0:
-        point_won("player1")
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+        point_won("player1")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
     if ball.colliderect(player1) or ball.colliderect(player2):
         ball_speed_x *= -1
         
-
 def animate_player():
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
@@ -195,16 +169,6 @@ score_font = pygame.font.Font(None, 100)
 background_image = pygame.image.load('img/background1.jpg').convert()
 background_image = pygame.transform.scale(background_image, (screen_width, screen_height))
 
-# Load the bar image
-# bar_width = 100  # Define the width of the bar
-# bar_height = 20  # Define the height of the bar
-# bar1_image = pygame.image.load('img/bar.png').convert_alpha()
-# bar1_image = pygame.transform.scale(bar1_image, (bar_width, bar_height))  # Adjust the size to fit your bar
-
-# bar2_image = pygame.image.load('img/bar.png').convert_alpha()
-# bar2_image = pygame.transform.scale(bar2_image, (bar_width, bar_height))  # Adjust the size to fit your bar
-
-
 # Load the item image
 item_image = pygame.image.load('img/tangtoc.png')
 item_image = pygame.transform.scale(item_image, (30, 30)).convert_alpha()
@@ -226,12 +190,12 @@ item3_image = pygame.transform.scale(item3_image, (30, 30)).convert_alpha()
 # Create the third item
 item3 = pygame.Rect(random.randint(0, screen_width), random.randint(0, screen_height), 30, 30)
 
-# # Load the fourth item image
-# item4_image = pygame.image.load('img/x2diem.png')
-# item4_image = pygame.transform.scale(item4_image, (30, 30)).convert_alpha()
+# Load the fourth item image
+item4_image = pygame.image.load('img/x2diem.png')
+item4_image = pygame.transform.scale(item4_image, (30, 30)).convert_alpha()
 
-# # Create the fourth item
-# item4 = pygame.Rect(random.randint(0, screen_width), random.randint(0, screen_height), 30, 30)
+# Create the fourth item
+item4 = pygame.Rect(random.randint(0, screen_width), random.randint(0, screen_height), 30, 30)
 
 # Load the fifth item image
 item5_image = pygame.image.load('img/biggerbar.png')
@@ -262,11 +226,12 @@ item8_image = pygame.transform.scale(item8_image, (30, 30)).convert_alpha()
 item8 = pygame.Rect(random.randint(0, screen_width), random.randint(0, screen_height), 30, 30)
 
 # Load the nineth item image
-item9_image = pygame.image.load('img/plusball.png')
+item9_image = pygame.image.load('img/exit.png')
 item9_image = pygame.transform.scale(item9_image, (30, 30)).convert_alpha()
 
 # Create the nineth item
 item9 = pygame.Rect(random.randint(0, screen_width), random.randint(0, screen_height), 30, 30)
+item9_active = False
 
 #Load and play backkground music:
 pygame.mixer.music.load('sounds/background_music.mp3')
@@ -278,8 +243,11 @@ ball2_active = False
 ball2_speed_x = 6
 ball2_speed_y = 6
 
-while True:
-    #Check for events
+start_time = pygame.time.get_ticks()  # Initialize start time
+game_over = False  # Initialize game_over before the loop
+
+while not game_over:
+    # Check for events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -287,77 +255,86 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 player1_speed = -6
-            if event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN:
                 player1_speed = 6
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                 player1_speed = 0
-    # If the game is over, stop the background music
-    game_over = False
-    if game_over:
-        pygame.mixer.music.stop()
 
+    # Check if 60 seconds have passed to end the game
+    current_time = pygame.time.get_ticks()
+    if (current_time - start_time) > 60000:
+        game_over = True
+        if player1_points > player2_points:
+            win_surface = score_font.render("You win!", True, "white")
+            screen.blit(win_surface, (screen_width/2, screen_height/2))
+            pygame.display.update()
+            pygame.time.wait(6000)
+            break
+        elif player2_points > player1_points:
+            win_surface = score_font.render("You win!", True, "white")
+            screen.blit(win_surface, (screen_width/4, screen_height/2))
+            pygame.display.update()
+            pygame.time.wait(6000)
+            break
+        else:  # In case of a tie
+            win_surface = score_font.render("It's a tie!", True, "white")
+            screen.blit(win_surface, (screen_width/2 - win_surface.get_width()/2, screen_height/2))
+            pygame.display.update()
+            pygame.time.wait(6000)
+            break
+    
+    # Define item9_rect before checking if item9 is active
+    item9_rect = pygame.Rect(item9.x, item9.y, item9.width, item9.height)
+
+    if not item9_active and (pygame.time.get_ticks() - start_time) > 30000:
+        item9_active = True
+
+    # Draw item9 if active
+    if item9_active:
+        screen.blit(item9_image, (item9_rect.x, item9_rect.y))
+
+    # Check for collision with item9
+    if ball.colliderect(item9_rect) and item9_active:
+        game_over = True
+        # Determine the winner or if it's a tie
+        if player1_points > player2_points:
+            win_surface = score_font.render("You Win!", True, "white")
+        elif player2_points > player1_points:
+            win_surface = score_font.render("You Win!", True, "white")
+        else:
+            win_surface = score_font.render("It's a tie!", True, "white")
+        # Display the result
+        screen.blit(win_surface, (screen_width/2 - win_surface.get_width()/2, screen_height/2))
+        pygame.display.update()
+        pygame.time.wait(6000)  # Wait a few seconds to display the result
+        break  # Exit the game loop
+
+    if game_over:
+        break
+    
     #Change the positions of the game objects
     animate_ball()
     animate_player()
-    #Check if a player has reached 10 points
-    if player1_points >= 10:
-        win_surface = score_font.render("You win!", True, "white")
-        screen.blit(win_surface, (screen_width/2, screen_height/2))
-        pygame.display.update()
-        pygame.time.wait(6000)
-        break
-    elif player2_points >= 10:
-        win_surface = score_font.render("You win!", True, "white")
-        screen.blit(win_surface, (screen_width/4, screen_height/2))
-        pygame.display.update()
-        pygame.time.wait(6000)
-        break
-
-    #Check for a collision with the ninth item
-    if ball.colliderect(item9):
-    # Clone the ball
-        ball2 = pygame.Rect(ball.x, ball.y, ball.width, ball.height)
-        ball2_active = True
-        # Give ball2 a different speed or direction
-        ball2_speed_x = -ball_speed_x
-        ball2_speed_y = -ball_speed_y
-        item9.x = random.randint(0, screen_width)
-        item9.y = random.randint(0, screen_height)
-
-    if ball2_active:
-        ball2.x += ball2_speed_x
-        ball2.y += ball2_speed_y
-
-    if ball2.bottom >= screen_height or ball2.top <= 0:
-        ball2_speed_y *= -1
-
-    if ball2.right >= screen_width:
-        point_won("player2")
-        ball2_active = False
-
-    if ball2.left <= 0:
-        point_won("player1")
-        ball2_active = False
-
-    if ball2.colliderect(player1) or ball2.colliderect(player2):
-        ball2_speed_x *= -1
-
     # #Clear the screen
     screen.fill('black')
 
     # Draw the background image
     screen.blit(background_image, (0, 0))
 
-    # Draw the bars
-    # screen.blit(bar1_image, player1.topleft)  # Replace 'player1' with your bar's Rect object
-    # screen.blit(bar2_image, player2.topleft)  # Replace 'player2' with your bar's Rect object
-
     #Draw the score
     player2_score_surface = score_font.render(str(player2_points), True, "white")
     player1_score_surface = score_font.render(str(player1_points), True, "white")
     screen.blit(player2_score_surface,(screen_width/4,20))
     screen.blit(player1_score_surface,(3*screen_width/4,20))
+
+    # Display countdown timer
+    remaining_time = 60 - (current_time - start_time) / 1000  # Convert milliseconds to seconds
+    time_text = f"{int(remaining_time)}"  # Display only whole seconds
+    time_surface = score_font.render(time_text, True, (255, 255, 255))  # Assuming 'score_font' is defined, change color if needed
+    time_x = screen_width / 2 - time_surface.get_width() / 2
+    time_y = 20  # 20 pixels from the top, adjust as needed
+    screen.blit(time_surface, (time_x, time_y))
 
     #Draw the game objects
     pygame.draw.aaline(screen,'white',(screen_width/2, 0), (screen_width/2, screen_height))
@@ -377,12 +354,8 @@ while True:
     # Draw the third item
     screen.blit(item3_image, item3)
     
-    # # Draw the fourth item
-    # screen.blit(item4_image, item4)
-
-    # # Draw the fourth item only if it's not off-screen
-    # if item4.x >= 0 and item4.y >= 0:
-    #     screen.blit(item4_image, item4)
+    # Draw the fourth item
+    screen.blit(item4_image, item4)
 
     # Draw the fifth item
     screen.blit(item5_image, item5)
@@ -396,7 +369,7 @@ while True:
     # Draw the eighth item
     screen.blit(item8_image, item8)
 
-    # Draw the ninth item
+    # Draw the nineth item
     screen.blit(item9_image, item9)
 
     # Update the display
