@@ -1,2 +1,2 @@
 # Pong Python
-## Giới thiệu: Pong game in Python with multiplayer mode and item power-ups
+## Introduction: Pong game in Python with multiplayer mode and item power-ups
